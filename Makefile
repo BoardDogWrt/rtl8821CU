@@ -93,7 +93,7 @@ CONFIG_RTW_SDIO_PM_KEEP_POWER = y
 ###################### MP HW TX MODE FOR VHT #######################
 CONFIG_MP_VHT_HW_TX_MODE = n
 ###################### Platform Related #######################
-CONFIG_PLATFORM_I386_PC = y
+CONFIG_PLATFORM_I386_PC = n
 CONFIG_PLATFORM_ARM_RPI = n
 CONFIG_PLATFORM_ARM_RPI3 = n
 CONFIG_PLATFORM_ANDROID_X86 = n
@@ -1047,7 +1047,9 @@ ifeq ($(CONFIG_PLATFORM_I386_PC), y)
 EXTRA_CFLAGS += -mhard-float
 else
 ## For ARM ToolChain use Hardware FLOATING
-EXTRA_CFLAGS += -mfloat-abi=hard
+# Raspbian kernel is with soft-float.
+# 'softfp' allows FP instructions, but no FP on function call interfaces
+EXTRA_CFLAGS += -mfloat-abi=softfp
 endif
 endif
 
@@ -1065,6 +1067,43 @@ EXTRA_CFLAGS += -DCONFIG_DISABLE_PHYDM_DEBUG_FUNCTION
 endif
 
 EXTRA_CFLAGS += -DDM_ODM_SUPPORT_TYPE=0x04
+
+# { FriendlyARM boards support
+ifeq ($(CONFIG_VENDOR_FRIENDLYARM), y)
+MODULE_NAME = rtl8821CU
+
+ifeq ($(KERNELRELEASE),)
+$(info ********************************************************************************)
+$(info *  Building module - $(MODULE_NAME).ko for FriendlyARM boards)
+endif
+
+EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+ARCH ?= arm
+CROSS_COMPILE ?=
+KVER ?= 4.4.49-s5p4418
+KSRC ?= /opt/FriendlyARM/build/linux-4.4.y
+KLIB ?= /tmp/wireless-modules
+INSTALL_PREFIX :=
+
+ifeq ($(CONFIG_PLATFORM_ANDROID), y)
+ifeq ($(KERNELRELEASE),)
+$(info *  Building driver with Android support)
+endif
+EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
+EXTRA_CFLAGS += -DCONFIG_PLATFORM_ANDROID
+EXTRA_CFLAGS += -DRTW_ENABLE_WIFI_CONTROL_FUNC -DCONFIG_RADIO_WORK
+endif
+
+ifeq ($(KERNELRELEASE),)
+$(info *)
+$(info *    Kernel Version: $(KVER) )
+$(info *    Kernel TOP-Dir: $(KSRC) )
+$(info *)
+$(info *  Copyright 2019 FriendlyARM (http://www.friendlyarm.com/))
+$(info ********************************************************************************)
+endif
+endif # END of VENDOR_FRIENDLYARM }
 
 ifeq ($(CONFIG_PLATFORM_I386_PC), y)
 EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
