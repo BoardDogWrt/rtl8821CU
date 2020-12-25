@@ -2134,6 +2134,7 @@ BIP_exit:
 #endif /* CONFIG_IEEE80211W */
 
 #ifndef PLATFORM_FREEBSD
+#ifndef CONFIG_CRYPTO_SHA256
 /* compress 512-bits */
 static int sha256_compress(struct sha256_state *md, unsigned char *buf)
 {
@@ -2306,6 +2307,7 @@ static int sha256_vector(size_t num_elem, u8 *addr[], size_t *len,
 		return -1;
 	return 0;
 }
+#endif
 
 static u8 os_strlen(const char *s)
 {
@@ -2333,6 +2335,7 @@ static int os_memcmp(void *s1, void *s2, u8 n)
 	return *p1 - *p2;
 }
 
+#ifndef CONFIG_CRYPTO_SHA256
 /**
  * hmac_sha256_vector - HMAC-SHA256 over data vector (RFC 2104)
  * @key: Key for HMAC operations
@@ -2403,7 +2406,9 @@ static void hmac_sha256_vector(u8 *key, size_t key_len, size_t num_elem,
 	_len[1] = 32;
 	sha256_vector(2, _addr, _len, mac);
 }
+#endif
 #endif /* PLATFORM_FREEBSD */
+
 /**
  * sha256_prf - SHA256-based Pseudo-Random Function (IEEE 802.11r, 8.5.1.5.2)
  * @key: Key for PRF
@@ -2418,6 +2423,7 @@ static void hmac_sha256_vector(u8 *key, size_t key_len, size_t num_elem,
  * given key.
  */
 #ifndef PLATFORM_FREEBSD /* Baron */
+#ifndef CONFIG_CRYPTO_SHA256
 static void sha256_prf(u8 *key, size_t key_len, char *label,
 		       u8 *data, size_t data_len, u8 *buf, size_t buf_len)
 {
@@ -2454,6 +2460,7 @@ static void sha256_prf(u8 *key, size_t key_len, char *label,
 		counter++;
 	}
 }
+#endif
 #endif /* PLATFORM_FREEBSD Baron */
 
 /* AES tables*/
