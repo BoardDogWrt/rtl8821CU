@@ -61,6 +61,10 @@
 
 /* #include <rtw_byteorder.h> */
 
+#ifndef GRO_DROP
+#undef  CONFIG_RTW_GRO
+#endif
+
 #ifndef BIT
 	#define BIT(x)	(1 << (x))
 #endif
