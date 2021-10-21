@@ -2010,7 +2010,7 @@ inline void rtw_set_rtnl_lock_holder(struct dvobj_priv *dvobj, _thread_hdl_ thd_
 	if (!thd_hdl || rtnl_is_locked())
 		dvobj->rtnl_lock_holder = thd_hdl;
 
-	if (dvobj->rtnl_lock_holder /* && 0 */)
+	if (dvobj->rtnl_lock_holder && 0)
 		RTW_INFO("rtnl_lock_holder: %s:%d\n", current->comm, current->pid);
 }
 

@@ -32,10 +32,6 @@ atomic_t _malloc_size = ATOMIC_INIT(0);
 #endif
 #endif /* DBG_MEMORY_LEAK */
 
-#ifndef CONFIG_SET_FS
-#define get_fs()		((mm_segment_t) { })
-#define set_fs(__fs)	do { } while (0)
-#endif
 
 #if defined(PLATFORM_LINUX)
 /*
