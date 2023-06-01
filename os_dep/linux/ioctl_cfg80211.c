@@ -17,6 +17,11 @@
 #include <drv_types.h>
 #include <hal_data.h>
 
+#if defined(CPTCFG_KERNEL_CODE)
+#undef LINUX_VERSION_CODE
+#define LINUX_VERSION_CODE CPTCFG_KERNEL_CODE
+#endif
+
 #ifdef CONFIG_IOCTL_CFG80211
 
 #ifndef DBG_RTW_CFG80211_STA_PARAM
@@ -1090,6 +1095,7 @@ check_bss:
 
 		#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)
 		#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 0, 0))
+		roam_info.links[0].channel = notify_channel;
 		roam_info.links[0].bssid = cur_network->network.MacAddress;
 		#else
 		roam_info.bssid = cur_network->network.MacAddress;
