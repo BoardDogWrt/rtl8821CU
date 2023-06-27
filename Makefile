@@ -1261,6 +1261,8 @@ EXTRA_CFLAGS += -DCONFIG_PLATFORM_ANDROID
 EXTRA_CFLAGS += -DRTW_ENABLE_WIFI_CONTROL_FUNC -DCONFIG_RADIO_WORK
 endif
 
+EXTRA_CFLAGS += -Wno-uninitialized -Wno-typedef-redefinition
+
 ifeq ($(KERNELRELEASE),)
 $(info *)
 $(info *    Kernel TOP-Dir: $(KSRC) )
